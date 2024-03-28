@@ -2,10 +2,10 @@ from matplotlib.colors import Colormap
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem.Draw import rdMolDraw2D
-from utils import *
-from heatmaps import ValueGrid
-from heatmaps import color_canvas
-from functions import GaussFunction2D
+from rdkit_heatmaps.utils import *
+from rdkit_heatmaps.heatmaps import ValueGrid
+from rdkit_heatmaps.heatmaps import color_canvas
+from rdkit_heatmaps.functions import GaussFunction2D
 from typing import *
 
 

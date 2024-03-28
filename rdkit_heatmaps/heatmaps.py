@@ -5,7 +5,7 @@ from rdkit.Geometry.rdGeometry import Point2D
 import abc
 import matplotlib.colors as colors
 from matplotlib import cm
-from functions import Function2D
+from rdkit_heatmaps.functions import Function2D
 
 
 class Grid2D(abc.ABC):
