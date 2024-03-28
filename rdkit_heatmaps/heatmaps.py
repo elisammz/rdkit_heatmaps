@@ -5,7 +5,7 @@ from rdkit.Geometry.rdGeometry import Point2D
 import abc
 import matplotlib.colors as colors
 from matplotlib import cm
-from rdkit_heatmaps.functions import Function2D
+from functions import Function2D
 
 
 class Grid2D(abc.ABC):
@@ -13,7 +13,14 @@ class Grid2D(abc.ABC):
 
     This class holds a matrix of values accessed by index, where each cell is associated with a specific location.
     """
-    def __init__(self, x_lim: Tuple[float, float], y_lim: Tuple[float, float], x_res: int, y_res: int):
+
+    def __init__(
+        self,
+        x_lim: Tuple[float, float],
+        y_lim: Tuple[float, float],
+        x_res: int,
+        y_res: int,
+    ):
         """
 
         Parameters
@@ -62,16 +69,31 @@ class Grid2D(abc.ABC):
         y_coord = min(self.y_lim) + self.dy * (y_idx + 0.5)
         return x_coord, y_coord
 
-    def grid_field_lim(self, x_idx: int, y_idx: int) -> Tuple[Tuple[float, float], Tuple[float, float]]:
+    def grid_field_lim(
+        self, x_idx: int, y_idx: int
+    ) -> Tuple[Tuple[float, float], Tuple[float, float]]:
         """Returns x and y coordinates for the upper left and lower right position of specified pixel."""
-        upper_left = (min(self.x_lim) + self.dx * x_idx, min(self.y_lim) + self.dy * y_idx)
-        lower_right = (min(self.x_lim) + self.dx * (x_idx + 1), min(self.y_lim) + self.dy * (y_idx + 1))
+        upper_left = (
+            min(self.x_lim) + self.dx * x_idx,
+            min(self.y_lim) + self.dy * y_idx,
+        )
+        lower_right = (
+            min(self.x_lim) + self.dx * (x_idx + 1),
+            min(self.y_lim) + self.dy * (y_idx + 1),
+        )
         return upper_left, lower_right
 
 
 class ColorGrid(Grid2D):
     """Stores rgba-values of cells."""
-    def __init__(self, x_lim: Tuple[float, float], y_lim: Tuple[float, float], x_res: int, y_res: int):
+
+    def __init__(
+        self,
+        x_lim: Tuple[float, float],
+        y_lim: Tuple[float, float],
+        x_res: int,
+        y_res: int,
+    ):
         super().__init__(x_lim, y_lim, x_res, y_res)
         self.color_grid = np.ones((self.x_res, self.y_res, 4))
 
@@ -82,8 +104,15 @@ class ValueGrid(Grid2D):
     Evaluates all added functions for the position of each cell and calculates the value of each cell as sum of these
     functions.
     """
-    def __init__(self, x_lim: Tuple[float, float], y_lim: Tuple[float, float], x_res: int, y_res: int, ):
-        """ Initializes the ValueGrid with limits and resolution of the axes.
+
+    def __init__(
+        self,
+        x_lim: Tuple[float, float],
+        y_lim: Tuple[float, float],
+        x_res: int,
+        y_res: int,
+    ):
+        """Initializes the ValueGrid with limits and resolution of the axes.
 
         Parameters
         ----------
@@ -112,8 +141,12 @@ class ValueGrid(Grid2D):
         None
         """
         self.values = np.zeros((self.x_res, self.y_res))
-        x_y0_list = np.array([self.grid_field_center(x, 0)[0] for x in range(self.x_res)])
-        x0_y_list = np.array([self.grid_field_center(0, y)[1] for y in range(self.y_res)])
+        x_y0_list = np.array(
+            [self.grid_field_center(x, 0)[0] for x in range(self.x_res)]
+        )
+        x0_y_list = np.array(
+            [self.grid_field_center(0, y)[1] for y in range(self.y_res)]
+        )
         xv, yv = np.meshgrid(x_y0_list, x0_y_list)
         xv = xv.ravel()
         yv = yv.ravel()
@@ -124,9 +157,11 @@ class ValueGrid(Grid2D):
             assert values.shape == self.values.shape, (values.shape, self.values.shape)
             self.values += values
 
-    def map2color(self, c_map: Union[colors.Colormap, str],
-                  v_lim: Optional[Sequence[float]] = None
-                  ) -> ColorGrid:
+    def map2color(
+        self,
+        c_map: Union[colors.Colormap, str],
+        v_lim: Optional[Sequence[float]] = None,
+    ) -> ColorGrid:
         """Generates a ColorGrid from self.values according to given colormap
 
         Parameters
